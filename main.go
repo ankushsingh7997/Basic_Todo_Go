@@ -29,13 +29,6 @@ var rnd *renderer.Render
 
 const port string = ":3001"
 
-type todo struct {
-	ID        string    `json:"id"`
-	Title     string    `json:"title"`
-	Completed bool      `json:"completed"`
-	CreatedAt time.Time `json:"createdAt"`
-}
-
 func main() {
 	// Close server gracefully
 	stopChan := make(chan os.Signal, 1)

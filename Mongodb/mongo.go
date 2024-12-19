@@ -2,7 +2,6 @@ package mongodb
 
 import (
 	"context"
-	"log"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -18,13 +17,14 @@ var Collection *mongo.Collection
 
 func init() {
 	clientOption := options.Client().ApplyURI(connectionString)
+	logger, _ := zap.NewProduction()
+	defer logger.Sync()
 	client, err := mongo.Connect(context.TODO(), clientOption)
 	if err != nil {
-		log.Printf("Could not connect to Mongo db at %s %v", connectionString, err)
+		logger.Error("Could not connect to Mongo db at ", zap.String("connectionString", connectionString), zap.Error(err))
 		Collection = nil
 	}
-	logger, err := zap.NewProduction()
-	defer logger.Sync()
+
 	logger.Info("Connected to MongoDb")
 
 	Collection = client.Database(dbName).Collection(collectionName)
